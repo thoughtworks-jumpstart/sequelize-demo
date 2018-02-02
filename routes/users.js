@@ -3,13 +3,13 @@ const passport = require("passport");
 const auth = require("./auth");
 const db = require("../models");
 
-router.get("/", function(req, res, next) {
-  db.user.findAll().then(function(users) {
+router.get("/", (req, res, next) => {
+  db.user.findAll().then(users => {
     res.json({ users: users });
   });
 });
 
-router.post("/", function(req, res, next) {
+router.post("/", (req, res, next) => {
   db.user
     .findOrCreate({
       where: { email: req.body.email },
@@ -19,7 +19,7 @@ router.post("/", function(req, res, next) {
         age: req.body.age
       }
     })
-    .spread(function(user, created) {
+    .spread((user, created) => {
       if (created) {
         return res.json({
           user: user
@@ -32,7 +32,7 @@ router.post("/", function(req, res, next) {
     });
 });
 
-router.put("/:id", function(req, res, next) {
+router.put("/:id", (req, res, next) => {
   db.user
     .findOne({
       where: {
@@ -40,7 +40,7 @@ router.put("/:id", function(req, res, next) {
       }
     })
     // )
-    .then(function(user) {
+    .then(user => {
       user
         .update({
           firstName: req.body.firstName || db.user.firstName,
@@ -48,7 +48,7 @@ router.put("/:id", function(req, res, next) {
           age: req.body.age || db.user.age,
           email: req.body.email || db.user.email
         })
-        .then(function(user) {
+        .then(user => {
           res.json({
             user: user
           });
@@ -56,14 +56,14 @@ router.put("/:id", function(req, res, next) {
     });
 });
 
-router.delete("/:id", function(req, res, next) {
+router.delete("/:id", (req, res, next) => {
   db.user
     .destroy({
       where: {
         id: req.params.id
       }
     })
-    .then(function(user) {
+    .then(user => {
       return res.json({ message: "User deleted" });
     });
 });
