@@ -33,7 +33,6 @@ router.post("/", function(req, res, next) {
 });
 
 router.put("/:id", function(req, res, next) {
-  console.log(req.params.id);
   db.user
     .findOne({
       where: {
@@ -54,6 +53,18 @@ router.put("/:id", function(req, res, next) {
             user: user
           });
         });
+    });
+});
+
+router.delete("/:id", function(req, res, next) {
+  db.user
+    .destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(function(user) {
+      return res.json({ message: "User deleted" });
     });
 });
 

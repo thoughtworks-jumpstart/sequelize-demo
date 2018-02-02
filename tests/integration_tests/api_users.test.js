@@ -1,5 +1,7 @@
 const app = require("../../app");
 const request = require("supertest");
+const db = require("../../models");
+let testUserId;
 let user;
 
 describe("routes/users", () => {
@@ -13,7 +15,7 @@ describe("routes/users", () => {
     };
   });
   it("POST /users should create a new user", async () => {
-    response = await request(app)
+    const response = await request(app)
       .post("/users")
       .set("Accept", "application/json")
       .send(user);
@@ -25,12 +27,12 @@ describe("routes/users", () => {
   });
 
   it("PUT /users/:id should update user details", async () => {
-    response = await request(app)
+    let response = await request(app)
       .post("/users")
       .set("Accept", "application/json")
       .send(user);
 
-    const testUserId = response.body.user.id;
+    testUserId = response.body.user.id;
 
     updatedUser = {
       firstName: "another first name",
@@ -48,7 +50,7 @@ describe("routes/users", () => {
   });
 
   it("GET /users should return a list of users", async () => {
-    response = await request(app)
+    const response = await request(app)
       .get("/users")
       .set("Accept", "application/json");
 
@@ -56,5 +58,22 @@ describe("routes/users", () => {
     expect(response.body.users.length).toBeGreaterThanOrEqual(1);
     expect(response.body.users[0].firstName).toBeTruthy();
     expect(response.body.users[0].lastName).toBeTruthy();
+  });
+
+  it("DELETE /users/:id should delete user", async () => {
+    const response = await request(app)
+      .delete(`/users/${testUserId}`)
+      .set("Accept", "application/json");
+
+    expect(response.status).toEqual(200);
+    expect(response.body.message).toEqual("User deleted");
+
+    const nonExistentUsers = await db.user.findAll({
+      where: {
+        id: testUserId
+      }
+    });
+
+    expect(nonExistentUsers.length).toEqual(0);
   });
 });
