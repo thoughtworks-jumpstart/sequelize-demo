@@ -5,7 +5,7 @@ const db = require("../models");
 
 router.get("/", function(req, res, next) {
   db.user.findAll().then(function(users) {
-    res.json(users);
+    res.json({ users: users });
   });
 });
 

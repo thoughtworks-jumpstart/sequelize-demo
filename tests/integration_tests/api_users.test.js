@@ -46,4 +46,15 @@ describe("routes/users", () => {
     expect(response.body.user.firstName).toEqual(updatedUser.firstName);
     expect(response.body.user.lastName).toEqual(updatedUser.lastName);
   });
+
+  it("GET /users should return a list of users", async () => {
+    response = await request(app)
+      .get("/users")
+      .set("Accept", "application/json");
+
+    expect(response.status).toEqual(200);
+    expect(response.body.users.length).toBeGreaterThanOrEqual(1);
+    expect(response.body.users[0].firstName).toBeTruthy();
+    expect(response.body.users[0].lastName).toBeTruthy();
+  });
 });
