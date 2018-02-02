@@ -1,23 +1,49 @@
 const app = require("../../app");
 const request = require("supertest");
+let user;
 
 describe("routes/users", () => {
-  it("POST /users should create a new user", async () => {
-    const user = {
-      firstName: "hello",
-      lastName: "kitty",
+  beforeEach(() => {
+    const randomLongFloat = Math.random();
+    user = {
+      firstName: "some first name",
+      lastName: "some other name",
       age: 5,
-      email: "hello@kitty.com"
+      email: `${randomLongFloat}@email.com`
     };
-
-    let response = await request(app)
+  });
+  it("POST /users should create a new user", async () => {
+    response = await request(app)
       .post("/users")
       .set("Accept", "application/json")
       .send(user);
 
     expect(response.status).toEqual(200);
-    expect(response.body.user[0].firstName).toEqual(user.firstName);
-    expect(response.body.user[0].lastName).toEqual(user.lastName);
-    expect(response.body.user[0].age).toEqual(user.age);
+    expect(response.body.user.firstName).toEqual(user.firstName);
+    expect(response.body.user.lastName).toEqual(user.lastName);
+    expect(response.body.user.age).toEqual(user.age);
+  });
+
+  it("PUT /users/:id should update user details", async () => {
+    response = await request(app)
+      .post("/users")
+      .set("Accept", "application/json")
+      .send(user);
+
+    const testUserId = response.body.user.id;
+
+    updatedUser = {
+      firstName: "another first name",
+      lastName: "another last name"
+    };
+
+    response = await request(app)
+      .put(`/users/${testUserId}`)
+      .set("Accept", "application/json")
+      .send(updatedUser);
+
+    expect(response.status).toEqual(200);
+    expect(response.body.user.firstName).toEqual(updatedUser.firstName);
+    expect(response.body.user.lastName).toEqual(updatedUser.lastName);
   });
 });

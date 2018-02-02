@@ -10,7 +10,9 @@
 
 ### Incorporating Sequelize as an ORM
 
-- yarn add pg pg-hstore sequelize
+- yarn add pg@6.4.2 pg-hstore sequelize
+  - we have to use pg@6.4.2 because of a bug in findOrCreate in the latest version (7.4.1)
+    -  see: https://github.com/sequelize/sequelize/issues/8043
 - createdb sequelize_demo_development
 - sequelize init
 - update `config/config.json`:
