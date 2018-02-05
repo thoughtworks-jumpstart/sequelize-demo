@@ -41,3 +41,7 @@
   - if you get an error saying that user.js already exist, follow the instructions and add a `--force` option
 - Run db migration`sequelize db:migrate`
   - if you want to undo migration: `sequelize db:migrate:undo`
+
+
+---
+Copyright (c) 2018 ThoughtWorks. For personal use and training purposes only; not to be copied or distributed without further approval.
